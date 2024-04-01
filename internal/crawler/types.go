@@ -1,6 +1,9 @@
 package crawler
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+	"time"
+)
 
 type Urlset struct {
 	XMLName xml.Name `xml:"urlset"`
@@ -20,4 +23,12 @@ type Urlset struct {
 			Title   string `xml:"title"`
 		} `xml:"image"`
 	} `xml:"url"`
+}
+
+type CrawlerConfig struct {
+	Interval time.Duration
+}
+
+type Crawler struct {
+	Config *CrawlerConfig
 }

@@ -26,8 +26,9 @@ and then warming up the cache by performing an HEAD HTTP request to this URL.`,
 		}
 		// fmt.Println("crawl called")
 		// fmt.Println(cmd.Flags().Lookup("toggle").Value)
-
-		crawler.Crawl(args[0], interval)
+		config := crawler.CrawlerConfig{Interval: interval}
+		crawler := crawler.Crawler{Config: &config}
+		crawler.Crawl(args[0])
 	},
 }
 

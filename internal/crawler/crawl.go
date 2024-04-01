@@ -47,7 +47,7 @@ func launch_warm(urls *Urlset, interval time.Duration) {
 
 }
 
-func Crawl(url string, interval time.Duration) error {
+func (crawler *Crawler) Crawl(url string) error {
 	fmt.Printf("Crawling %s\n", url)
 	var urlset Urlset
 	if err := fetch_sitemap(url, &urlset); err != nil {
@@ -55,6 +55,9 @@ func Crawl(url string, interval time.Duration) error {
 	}
 	fmt.Printf("Found %d URLs in sitemap\n", len(urlset.URL))
 	fmt.Println("Crawling each URL")
-	launch_warm(&urlset, interval)
+	start := time.Now()
+	launch_warm(&urlset, crawler.Config.Interval)
+	end := time.Now()
+	fmt.Printf("Crawled %d urls in %s", len(urlset.URL), end.Sub(start))
 	return nil
 }
