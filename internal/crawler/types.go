@@ -2,6 +2,7 @@ package crawler
 
 import (
 	"encoding/xml"
+	"sync"
 	"time"
 )
 
@@ -30,5 +31,7 @@ type CrawlerConfig struct {
 }
 
 type Crawler struct {
-	Config *CrawlerConfig
+	Config     *CrawlerConfig
+	urlCrawled int `default:0`
+	mutex      sync.Mutex
 }

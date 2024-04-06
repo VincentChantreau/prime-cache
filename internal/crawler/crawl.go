@@ -2,8 +2,8 @@ package crawler
 
 import (
 	"encoding/xml"
-	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"sync"
 	"time"
@@ -25,39 +25,41 @@ func fetch_sitemap(url string, result *Urlset) error {
 	if err != nil {
 		return err
 	}
-	return nil
+	return err
 }
 
-func warm_cache(url string) error {
+func (crawler *Crawler) warm_cache(url string) error {
 	defer wg.Done()
 	_, err := http.Head(url)
 	if err != nil {
 		return err
 	}
-	return nil
+	crawler.mutex.Lock()
+	crawler.urlCrawled++
+	crawler.mutex.Unlock()
+	return err
 }
 
-func launch_warm(urls *Urlset, interval time.Duration) {
+func (crawler *Crawler) launch_warm(urls *Urlset) {
 	for _, element := range urls.URL {
-		fmt.Printf("%s\n", element.Loc)
+		log.Printf("%s\n", element.Loc)
 		wg.Add(1)
-		go warm_cache(element.Loc)
-		time.Sleep(interval)
+		go crawler.warm_cache(element.Loc)
+		time.Sleep(crawler.Config.Interval)
 	}
-
 }
 
 func (crawler *Crawler) Crawl(url string) error {
-	fmt.Printf("Crawling %s\n", url)
+	log.Printf("Crawling %s\n", url)
 	var urlset Urlset
 	if err := fetch_sitemap(url, &urlset); err != nil {
 		return err
 	}
-	fmt.Printf("Found %d URLs in sitemap\n", len(urlset.URL))
-	fmt.Println("Crawling each URL")
+	log.Printf("Found %d URLs in sitemap\n", len(urlset.URL))
+	log.Println("Crawling each URL")
 	start := time.Now()
-	launch_warm(&urlset, crawler.Config.Interval)
+	crawler.launch_warm(&urlset)
 	end := time.Now()
-	fmt.Printf("Crawled %d urls in %s", len(urlset.URL), end.Sub(start))
+	log.Printf("Crawled %d urls in %s", crawler.urlCrawled, end.Sub(start))
 	return nil
 }

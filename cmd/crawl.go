@@ -29,6 +29,7 @@ and then warming up the cache by performing an HEAD HTTP request to this URL.`,
 		config := crawler.CrawlerConfig{Interval: interval}
 		crawler := crawler.Crawler{Config: &config}
 		crawler.Crawl(args[0])
+
 	},
 }
 
