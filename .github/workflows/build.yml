@@ -22,8 +22,6 @@ jobs:
             arch: arm64
 
           - os: darwin
-            arch: arm
-          - os: darwin
             arch: arm64
 
           - os: windows
