@@ -45,7 +45,7 @@ jobs:
         env:
           GOOS: ${{ matrix.os }}
           GOARCH: ${{ matrix.arch }}
-        run: env GOOS=$GOOS GOARCH=$GOARCH go build -v
+        run: env GOOS=$GOOS GOARCH=$GOARCH go build -v -o prime-cache-${{ matrix.os }}-${{ matrix.arch }}
       - name:
         run: ls -all
   release:
