@@ -46,6 +46,8 @@ jobs:
           GOOS: ${{ matrix.os }}
           GOARCH: ${{ matrix.arch }}
         run: env GOOS=$GOOS GOARCH=$GOARCH go build -v
+      - name:
+        run: ls -all
   release:
     runs-on: ubuntu-latest
     steps:
