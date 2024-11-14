@@ -33,10 +33,7 @@ jobs:
         run: |
           go get .
       - name: Build Linux X86
-        run: go build -v -o prime-cache
-        env:
-          GOOS: ${{ matrix.os }}
-          GOARCH: ${{ matrix.arch }}
+        run: env GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -v -o prime-cache
   release:
     runs-on: ubuntu-latest
     steps:

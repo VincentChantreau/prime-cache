@@ -1,4 +1,4 @@
-module VincentChantreau/prime-cache
+module github.com/VincentChantreau/prime-cache
 
 go 1.20
 
