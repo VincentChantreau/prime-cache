@@ -32,5 +32,4 @@ jobs:
           body: Release version ${{ github.ref_name }} of Prime Cache
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
-            Release.txt
-            LICENSE
+            prime-cache
