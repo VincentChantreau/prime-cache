@@ -41,8 +41,9 @@ jobs:
       - name: Install dependencies
         run: |
           go get .
-      - name: Build Linux X86
-        run: env GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -v -o prime-cache
+      - name: Go build
+        run: env GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -v
+        if: ${{ matrix.os == 'windows' }}
   release:
     runs-on: ubuntu-latest
     steps:
