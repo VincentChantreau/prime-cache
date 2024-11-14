@@ -41,9 +41,11 @@ jobs:
       - name: Install dependencies
         run: |
           go get .
-      - name: Go build
-        run: env GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -v
-        if: ${{ matrix.os == 'windows' }}
+      - name: Run build
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+        run: env GOOS=$GOOS GOARCH=$GOARCH go build -v
   release:
     runs-on: ubuntu-latest
     steps:
