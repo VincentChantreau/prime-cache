@@ -9,6 +9,17 @@ permissions:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        os: [linux, windows, darwin, freebsd, openbsd]
+        include:
+          - os: linux
+            arch: [386, amd64, arm, arm64]
+          - os: darwin
+            arch: [amd64, arm, arm64]
+          - os: windows
+            arch: [amd64, 386]
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,6 +34,12 @@ jobs:
           go get .
       - name: Build Linux X86
         run: go build -v -o prime-cache
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+  release:
+    runs-on: ubuntu-latest
+    steps:
       - name: Release
         uses: softprops/action-gh-release@v2
         env:
