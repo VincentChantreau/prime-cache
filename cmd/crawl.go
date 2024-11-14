@@ -4,8 +4,9 @@ Copyright © 2024 Vincent Chantreau
 package cmd
 
 import (
-	"VincentChantreau/prime-cache/internal/crawler"
 	"time"
+
+	"github.com/VincentChantreau/prime-cache/internal/crawler"
 
 	"github.com/spf13/cobra"
 )
