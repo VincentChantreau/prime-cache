@@ -7,7 +7,7 @@ Prime-Cache is a powerful tool developed in Go for efficiently preloading a webs
 Prime-Cache can be easily installed using `go get`:
 
 ```
-go get github.com/username/prime-cache
+go get github.com/VincentChantreau/prime-cache
 ```
 
 ### Usage
@@ -40,6 +40,6 @@ Prime-Cache is licensed under the GNU General Public License v3.0. See the `LICE
 
 ### Contact
 
-For any inquiries or questions regarding Prime-Cache, please contact [email@example.com](mailto:email@example.com).
+For any inquiries or questions regarding Prime-Cache, please contact [contact@vincentchantreau.fr](mailto:contact@vincentchantreau.fr).
 
 Thank you for choosing Prime-Cache to optimize your website's cache performance!
