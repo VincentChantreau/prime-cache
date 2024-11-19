@@ -62,8 +62,8 @@ type CrawlMode string
 
 const (
 	Light  CrawlMode = "light"
-	Full             = "full"
-	Custom           = "custom"
+	Full   CrawlMode = "full"
+	Custom CrawlMode = "custom"
 )
 
 type CrawlerConfig struct {

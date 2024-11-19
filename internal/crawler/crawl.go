@@ -1,7 +1,6 @@
 package crawler
 
 import (
-	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -12,33 +11,9 @@ import (
 	"slices"
 	"sync"
 	"time"
-
-	"golang.org/x/net/html"
 )
 
 var wg sync.WaitGroup // instanciation de notre structure WaitGroup
-
-func process_script_tags(n *html.Node) {
-	if n.FirstChild == nil || n.Attr == nil {
-		return
-	}
-
-	for _, a := range n.Attr {
-		if a.Key == "type" && a.Val == "application/ld+json" {
-			var ld_json JSONLDHeaders
-			err := json.Unmarshal([]byte(n.FirstChild.Data), &ld_json)
-			if err != nil {
-				panic(err)
-			}
-			fmt.Println(ld_json)
-		}
-	}
-
-	// Traverse child nodes
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		process_script_tags(c)
-	}
-}
 
 func fetch_sitemap(url string, result *Urlset) error {
 	resp, err := http.Get(url)

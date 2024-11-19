@@ -29,7 +29,10 @@ and then warming up the cache by performing an HEAD HTTP request to this URL.`,
 		parser := parser.Parser{Config: &parserConfig}
 		config := crawler.CrawlerConfig{Interval: interval, Mode: crawler.CrawlMode(crawlMode)}
 		crawler := crawler.Crawler{Config: &config, Parser: &parser}
-		crawler.Crawl(args[0])
+		err := crawler.Crawl(args[0])
+		if err != nil {
+			panic(err)
+		}
 
 	},
 }

@@ -51,7 +51,10 @@ func (p *Parser) GetHrefs(n *html.Node, urls *[]string) error {
 	}
 	// Traverse child nodes
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		p.GetHrefs(c, urls)
+		err := p.GetHrefs(c, urls)
+		if err != nil {
+			continue
+		}
 	}
 	return nil
 }
@@ -65,7 +68,7 @@ func (p *Parser) GetAllUrls(body io.ReadCloser, urls *[]string) (err error) {
 	get_urls = func(n *html.Node) {
 		if n.Type == html.ElementNode {
 			err := p.GetHrefs(n, urls)
-			if err != nil {
+			if err != nil { //nolint:all
 			}
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
