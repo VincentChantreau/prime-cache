@@ -134,7 +134,8 @@ func (crawler *Crawler) LaunchWarm(urls *Urlset) {
 	for _, element := range urls.URL {
 		log.Printf("%s\n", element.Loc)
 		wg.Add(1)
-		go crawler.WarmCache(element.Loc)
+		go crawler.WarmCache(element.Loc) //nolint:all
+
 		time.Sleep(crawler.Config.Interval)
 	}
 }
