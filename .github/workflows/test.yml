@@ -10,7 +10,14 @@ jobs:
   unit-test:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Get dependencies
         run: go install .
       - name: Run tests
         run: go test ./...
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Golangci-lint
+        uses: golangci/golangci-lint-action@v6.1.1
