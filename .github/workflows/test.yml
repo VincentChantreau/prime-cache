@@ -1,0 +1,16 @@
+name: build
+run-name: Build Golang application
+on:
+  push:
+
+permissions:
+  contents: write
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get dependencies
+        run: go install .
+      - name: Run tests
+        run: go test ./...

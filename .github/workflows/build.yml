@@ -8,13 +8,6 @@ permissions:
   contents: write
 
 jobs:
-  unit-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get dependencies
-        run: go install .
-      - name: Run tests
-        run: go test ./...
   goreleaser:
     runs-on: ubuntu-latest
     steps:
