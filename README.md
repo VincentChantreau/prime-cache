@@ -1,6 +1,6 @@
 **Prime-Cache**
 
-Prime-Cache is a powerful tool developed in Go for efficiently preloading a website's cache. By sending HTTP HEAD requests to URLs listed in a sitemap, Prime-Cache helps ensure that frequently accessed pages are readily available in the cache, thereby enhancing website performance and responsiveness.
+Prime-Cache is a powerful tool developed in Go for efficiently preloading a website's cache. By sending HTTP requests to URLs listed in a sitemap, Prime-Cache helps ensure that frequently accessed pages are readily available in the cache, thereby enhancing website performance and responsiveness.
 
 ### Installation
 
@@ -11,6 +11,11 @@ go get github.com/VincentChantreau/prime-cache
 ```
 
 ### Usage
+
+Prime-Cache can be used in multiples mode
+- **`speed` (default)** : This mode is only performing an HTTP GET request to the urls and will not read the body for further processing.
+- **`full`** : This mode will try to find every possible cacheable ressources (including images, scripts, stylesheets, JSON-LD) and perform an HTTP GET request to this ressources.
+- **`custom`** : Only a defined subset of ressources found will then be called by an HTTP GET request.
 
 To utilize Prime-Cache, simply provide the path to the sitemap file as a command-line argument:
 
