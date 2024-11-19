@@ -1,5 +1,5 @@
 name: build
-run-name: Build Golang application
+run-name: Test and Lint code
 on:
   push:
 
@@ -19,5 +19,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Golangci-lint
         uses: golangci/golangci-lint-action@v6.1.1
