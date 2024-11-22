@@ -24,7 +24,7 @@ It will first generate the list of URL from the sitemap,
 and then warming up the cache by performing an HEAD HTTP request to this URL.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		ext := []string{".js", ".jpg", ".jpeg", ".webp"}
+		ext := []string{".css", ".js", ".jpg", ".jpeg", ".webp"}
 		parserConfig := parser.ParserConfig{FilteredFileExtensions: ext}
 		parser := parser.Parser{Config: &parserConfig}
 		config := crawler.CrawlerConfig{Interval: interval, Mode: crawler.CrawlMode(crawlMode)}

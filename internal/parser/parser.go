@@ -2,7 +2,6 @@ package parser
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"net/url"
 	"slices"
@@ -35,15 +34,11 @@ func (p *Parser) GetHrefs(n *html.Node, urls *[]string) error {
 	}
 	for _, a := range n.Attr {
 		if a.Key == "href" {
-			if strings.Contains(a.Val, "css") {
-				fmt.Println("CSS FOUND")
-			}
 			valid, err := p.FiltersUrls(&a.Val)
 			if err != nil {
 				continue
 			}
 			if valid {
-				fmt.Println(a.Val)
 				*urls = append(*urls, a.Val)
 			}
 		}
