@@ -17,8 +17,6 @@ func (p *Parser) FiltersUrls(raw_url *string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	// filter on extensions we look for
-	// paths := strings.Split(u.Path, ".")
 	index := slices.IndexFunc(p.Config.FilteredFileExtensions, func(s string) bool { return strings.Contains(u.Path, s) })
 	if index == -1 {
 		return false, errors.New("not found")

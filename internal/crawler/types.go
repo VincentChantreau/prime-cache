@@ -61,9 +61,9 @@ type Urlset struct {
 type CrawlMode string
 
 const (
-	Light  CrawlMode = "light"
-	Full   CrawlMode = "full"
-	Custom CrawlMode = "custom"
+	LightMode  CrawlMode = "light"
+	FullMode   CrawlMode = "full"
+	CustomMode CrawlMode = "custom"
 )
 
 type CrawlerConfig struct {

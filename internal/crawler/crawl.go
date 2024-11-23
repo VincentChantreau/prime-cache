@@ -72,7 +72,7 @@ func (crawler *Crawler) WarmCache(originUrl string) error {
 
 	// logic on what type of request to do
 	switch crawler.Config.Mode {
-	case Light:
+	case LightMode:
 		fmt.Println("light")
 
 		resp, err := crawler.headRequest(originUrl)
@@ -84,8 +84,7 @@ func (crawler *Crawler) WarmCache(originUrl string) error {
 		}
 		defer resp.Body.Close()
 
-	case Full:
-		fmt.Println("full")
+	case FullMode, CustomMode:
 		all_urls := []string{}
 		resp, err := crawler.getRequest(originUrl)
 		if err != nil {
@@ -106,8 +105,9 @@ func (crawler *Crawler) WarmCache(originUrl string) error {
 			if index != -1 {
 				return errors.New("url already warmed, skiping")
 			}
-			log.Println("Warming url ", parsedUrl.String())
+			log.Println("Warming url", parsedUrl.String())
 			resp, err := crawler.getRequest(parsedUrl.String())
+			time.Sleep(crawler.Config.Interval)
 			if err != nil {
 				return err
 			}
@@ -132,7 +132,7 @@ func (crawler *Crawler) WarmCache(originUrl string) error {
 
 func (crawler *Crawler) LaunchWarm(urls *Urlset) {
 	for _, element := range urls.URL {
-		log.Printf("%s\n", element.Loc)
+		log.Printf("Warming url %s\n", element.Loc)
 		wg.Add(1)
 		go crawler.WarmCache(element.Loc) //nolint:all
 
@@ -141,13 +141,13 @@ func (crawler *Crawler) LaunchWarm(urls *Urlset) {
 }
 
 func (crawler *Crawler) Crawl(url string) error {
+	log.Printf("Running in %s mode", crawler.Config.Mode)
 	log.Printf("Crawling %s\n", url)
 	var urlset Urlset
 	if err := fetch_sitemap(url, &urlset); err != nil {
 		return err
 	}
 	log.Printf("Found %d URLs in sitemap\n", len(urlset.URL))
-	log.Println("Crawling each URL")
 	start := time.Now()
 	crawler.LaunchWarm(&urlset)
 	end := time.Now()

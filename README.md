@@ -15,7 +15,7 @@ go get github.com/VincentChantreau/prime-cache
 Prime-Cache can be used in multiples mode
 - **`speed` (default)** : This mode is only performing an HTTP GET request to the urls and will not read the body for further processing.
 - **`full`** : This mode will try to find every possible cacheable ressources (including images, scripts, stylesheets, JSON-LD) and perform an HTTP GET request to this ressources.
-- **`custom`** : Only a defined subset of ressources found will then be called by an HTTP GET request.
+- **`custom`** : Only a defined subset of ressources types that are found will then be called by an HTTP GET request.
 
 To utilize Prime-Cache, simply provide the path to the sitemap file as a command-line argument:
 
@@ -23,7 +23,7 @@ To utilize Prime-Cache, simply provide the path to the sitemap file as a command
 prime-cache crawl <path_to_sitemap.xml>
 ```
 
-Prime-Cache will then initiate the process of sending HTTP HEAD requests to each URL listed in the provided sitemap, effectively priming the cache with the specified pages.
+Prime-Cache will then initiate the process of sending HTTP GET requests to each URL listed in the provided sitemap, effectively priming the cache with the specified pages.
 
 ### Example
 
@@ -33,7 +33,17 @@ Suppose you have a sitemap named `sitemap.xml` containing the URLs of your websi
 prime-cache crawl https://mysite.com/sitemap.xml
 ```
 
-Prime-Cache will then commence crawling the URLs listed in `sitemap.xml` and send HTTP HEAD requests to each URL.
+Prime-Cache will then commence crawling the URLs listed in `sitemap.xml` and send HTTP GET requests to each URL.
+
+
+### Full mode
+
+To warm urls found in the main URL webpage, you can switch to `full` mode using the `--full` flag.
+
+```
+prime-cache crawl --full <path_to_sitemap.xml>
+```
+
 
 ### Contribution
 

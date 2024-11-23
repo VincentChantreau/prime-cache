@@ -11,8 +11,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var interval time.Duration
-var crawlMode string
+var (
+	interval   time.Duration
+	fullMode   bool
+	customMode bool
+	crawlMode  crawler.CrawlMode
+	extensions []string
+)
 
 // crawlCmd represents the crawl command
 var crawlCmd = &cobra.Command{
@@ -24,10 +29,20 @@ It will first generate the list of URL from the sitemap,
 and then warming up the cache by performing an HEAD HTTP request to this URL.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		ext := []string{".css", ".js", ".jpg", ".jpeg", ".webp"}
-		parserConfig := parser.ParserConfig{FilteredFileExtensions: ext}
+		if len(extensions) < 1 {
+			// default to full mode
+			extensions = []string{".css", ".js", ".jpg", ".jpeg", ".webp"}
+		}
+		if fullMode {
+			crawlMode = crawler.FullMode
+		} else if customMode {
+			crawlMode = crawler.CustomMode
+		} else {
+			crawlMode = crawler.LightMode
+		}
+		parserConfig := parser.ParserConfig{FilteredFileExtensions: extensions}
 		parser := parser.Parser{Config: &parserConfig}
-		config := crawler.CrawlerConfig{Interval: interval, Mode: crawler.CrawlMode(crawlMode)}
+		config := crawler.CrawlerConfig{Interval: interval, Mode: crawlMode}
 		crawler := crawler.Crawler{Config: &config, Parser: &parser}
 		err := crawler.Crawl(args[0])
 		if err != nil {
@@ -40,5 +55,10 @@ and then warming up the cache by performing an HEAD HTTP request to this URL.`,
 func init() {
 	rootCmd.AddCommand(crawlCmd)
 	crawlCmd.Flags().DurationVar(&interval, "interval", 100*time.Millisecond, "")
-	crawlCmd.Flags().StringVarP(&crawlMode, "mode", "m", "light", "url crawl mode (light, full, custom)")
+	crawlCmd.Flags().BoolVar(&fullMode, "full", false, "enable full mode")
+	crawlCmd.Flags().BoolVar(&customMode, "custom", false, "enable custom mode")
+	crawlCmd.Flags().StringSliceVar(&extensions, "extensions", []string{}, "file extensions needed for URLs found in body to be warmed")
+	crawlCmd.MarkFlagsMutuallyExclusive("full", "custom")
+	crawlCmd.MarkFlagsRequiredTogether("custom", "extensions")
+
 }
