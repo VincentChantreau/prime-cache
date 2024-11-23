@@ -6,8 +6,8 @@ package cmd
 import (
 	"time"
 
-	"github.com/VincentChantreau/prime-cache/internal/crawler"
-	"github.com/VincentChantreau/prime-cache/internal/parser"
+	"github.com/VincentChantreau/prime-cache/crawler"
+	"github.com/VincentChantreau/prime-cache/parser"
 	"github.com/spf13/cobra"
 )
 

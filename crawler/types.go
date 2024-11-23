@@ -1,42 +1,12 @@
 package crawler
 
 import (
-	"encoding/json"
 	"encoding/xml"
 	"sync"
 	"time"
 
-	"github.com/VincentChantreau/prime-cache/internal/parser"
+	"github.com/VincentChantreau/prime-cache/parser"
 )
-
-type JSONLDHeaders struct {
-	Context string      `json:"@context"`
-	Type    string      `json:"@type"`
-	Image   interface{} `json:"image,omitempty"`
-}
-
-func (this *JSONLDHeaders) UnmarshalJSON(data []byte) error {
-	raw := struct {
-		Context string      `json:"@context"`
-		Type    string      `json:"@type"`
-		Image   interface{} `json:"image,omitempty"`
-	}{}
-
-	err := json.Unmarshal(data, &raw)
-	if err != nil {
-		return err
-	}
-
-	this.Context = raw.Context
-	this.Type = raw.Type
-
-	// try to cast to string
-	if imageUrl, ok := raw.Image.(string); ok {
-		this.Image = imageUrl
-	}
-
-	return nil
-}
 
 type Urlset struct {
 	XMLName xml.Name `xml:"urlset"`
