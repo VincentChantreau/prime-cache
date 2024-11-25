@@ -8,14 +8,16 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"slices"
+	"strings"
 	"sync"
 	"time"
 )
 
 var wg sync.WaitGroup // instanciation de notre structure WaitGroup
 
-func fetch_sitemap(url string, result *Urlset) error {
+func fetch_urls_from_sitemap(url string, result *[]string) error {
 	resp, err := http.Get(url)
 	if err != nil {
 		return err
@@ -25,7 +27,11 @@ func fetch_sitemap(url string, result *Urlset) error {
 	if err != nil {
 		return err
 	}
-	err = xml.Unmarshal(data, result)
+	var set Urlset
+	err = xml.Unmarshal(data, &set)
+	for _, element := range set.URL {
+		*result = append(*result, element.Loc)
+	}
 	if err != nil {
 		return err
 	}
@@ -73,15 +79,14 @@ func (crawler *Crawler) WarmCache(originUrl string) error {
 	// logic on what type of request to do
 	switch crawler.Config.Mode {
 	case LightMode:
-		fmt.Println("light")
-
-		resp, err := crawler.headRequest(originUrl)
+		resp, err := crawler.getRequest(originUrl)
 		if err != nil {
-			return fmt.Errorf("error when issuing HEAD request to %s", originUrl)
+			return fmt.Errorf("error when issuing GET request to %s", originUrl)
 		}
 		if resp.StatusCode != 200 {
 			return fmt.Errorf("page %s return code %d", originUrl, resp.StatusCode)
 		}
+		log.Println("no errors so far")
 		defer resp.Body.Close()
 
 	case FullMode, CustomMode:
@@ -107,6 +112,7 @@ func (crawler *Crawler) WarmCache(originUrl string) error {
 			}
 			log.Println("Warming url", parsedUrl.String())
 			resp, err := crawler.getRequest(parsedUrl.String())
+
 			time.Sleep(crawler.Config.Interval)
 			if err != nil {
 				return err
@@ -116,13 +122,13 @@ func (crawler *Crawler) WarmCache(originUrl string) error {
 			}
 			crawler.mutex.Lock()
 			crawler.urlWarmed = append(crawler.urlWarmed, parsedUrl.String())
+			crawler.urlCrawled++
 			crawler.mutex.Unlock()
 		}
 
 		defer resp.Body.Close()
 
 	}
-
 	crawler.mutex.Lock()
 	crawler.urlCrawled++
 	crawler.mutex.Unlock()
@@ -130,27 +136,53 @@ func (crawler *Crawler) WarmCache(originUrl string) error {
 	return nil
 }
 
-func (crawler *Crawler) LaunchWarm(urls *Urlset) {
-	for _, element := range urls.URL {
-		log.Printf("Warming url %s\n", element.Loc)
+func (crawler *Crawler) LaunchWarm(urls *[]string) {
+	for _, url := range *urls {
+		log.Printf("Warming url %s\n", url)
 		wg.Add(1)
-		go crawler.WarmCache(element.Loc) //nolint:all
+		go crawler.WarmCache(url) //nolint:all
 
 		time.Sleep(crawler.Config.Interval)
 	}
 }
 
-func (crawler *Crawler) Crawl(url string) error {
-	log.Printf("Running in %s mode", crawler.Config.Mode)
+func (crawler *Crawler) CrawlFromSiteMap(url string) error {
 	log.Printf("Crawling %s\n", url)
-	var urlset Urlset
-	if err := fetch_sitemap(url, &urlset); err != nil {
+	var urls []string
+	if err := fetch_urls_from_sitemap(url, &urls); err != nil {
+		log.Fatal(err)
 		return err
 	}
-	log.Printf("Found %d URLs in sitemap\n", len(urlset.URL))
+	log.Printf("Found %d URLs in sitemap\n", len(urls))
+	err := crawler.crawl(&urls)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (crawler *Crawler) CrawlFromFile(filePath string, fileFormat string) error {
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		return err
+	}
+	str := string(content) // convert content to a 'string'
+	urls := strings.Split(str, "\n")
+	err = crawler.crawl(&urls)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (crawler *Crawler) crawl(urls *[]string) error {
+	log.Printf("Running in %s mode", crawler.Config.Mode)
 	start := time.Now()
-	crawler.LaunchWarm(&urlset)
+	crawler.LaunchWarm(urls)
 	end := time.Now()
+	wg.Wait()
+
 	log.Printf("Crawled %d urls in %s", crawler.urlCrawled, end.Sub(start))
 	return nil
 }

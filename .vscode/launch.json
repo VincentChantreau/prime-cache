@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "program": "main.go",
-            "args": ["crawl", "--mode", "full", "https://www.astronome.fr/1_fr_0_sitemap.xml"]
+            "args": ["warm", "local-file", "list"]
         }
     ]
 }
