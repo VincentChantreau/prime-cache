@@ -8,16 +8,14 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 	"slices"
-	"strings"
 	"sync"
 	"time"
 )
 
 var wg sync.WaitGroup // instanciation de notre structure WaitGroup
 
-func fetch_urls_from_sitemap(url string, result *[]string) error {
+func (crawler *Crawler) UrlsFromSitemap(url string, result *[]string) error {
 	resp, err := http.Get(url)
 	if err != nil {
 		return err
@@ -120,18 +118,18 @@ func (crawler *Crawler) WarmCache(originUrl string) error {
 			if resp.StatusCode != 200 {
 				return errors.New("url of ressource to warm did not responded correctly")
 			}
-			crawler.mutex.Lock()
+			crawler.Mutex.Lock()
 			crawler.urlWarmed = append(crawler.urlWarmed, parsedUrl.String())
 			crawler.urlCrawled++
-			crawler.mutex.Unlock()
+			crawler.Mutex.Unlock()
 		}
 
 		defer resp.Body.Close()
 
 	}
-	crawler.mutex.Lock()
+	crawler.Mutex.Lock()
 	crawler.urlCrawled++
-	crawler.mutex.Unlock()
+	crawler.Mutex.Unlock()
 
 	return nil
 }
@@ -146,37 +144,7 @@ func (crawler *Crawler) LaunchWarm(urls *[]string) {
 	}
 }
 
-func (crawler *Crawler) CrawlFromSiteMap(url string) error {
-	log.Printf("Crawling %s\n", url)
-	var urls []string
-	if err := fetch_urls_from_sitemap(url, &urls); err != nil {
-		log.Fatal(err)
-		return err
-	}
-	log.Printf("Found %d URLs in sitemap\n", len(urls))
-	err := crawler.crawl(&urls)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (crawler *Crawler) CrawlFromFile(filePath string, fileFormat string) error {
-	content, err := os.ReadFile(filePath)
-	if err != nil {
-		return err
-	}
-	str := string(content) // convert content to a 'string'
-	urls := strings.Split(str, "\n")
-	err = crawler.crawl(&urls)
-
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (crawler *Crawler) crawl(urls *[]string) error {
+func (crawler *Crawler) Crawl(urls *[]string) error {
 	log.Printf("Running in %s mode", crawler.Config.Mode)
 	start := time.Now()
 	crawler.LaunchWarm(urls)

@@ -46,5 +46,5 @@ type Crawler struct {
 	Parser     *parser.Parser
 	urlCrawled int
 	urlWarmed  []string
-	mutex      sync.Mutex
+	Mutex      *sync.Mutex
 }

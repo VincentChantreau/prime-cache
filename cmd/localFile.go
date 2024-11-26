@@ -4,6 +4,9 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"os"
+	"strings"
+
 	"github.com/spf13/cobra"
 )
 
@@ -22,14 +25,23 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			return err
 		}
-		crawler.CrawlFromFile(args[0], config.fileFormat)
+		// crawler.CrawlFromFile(args[0], config.fileFormat)
+		content, err := os.ReadFile(args[0])
+		if err != nil {
+			return err
+		}
+		str := string(content) // convert content to a 'string'
+		urls := strings.Split(str, "\n")
+		err = crawler.Crawl(&urls)
+
+		if err != nil {
+			return err
+		}
 		return nil
 	},
 }
 
 func init() {
 	warmCmd.AddCommand(localFileCmd)
-
-	// Here you will define your flags and configuration settings.
 	localFileCmd.Flags().StringVar(&config.fileFormat, "file-format", "csv", "specify file format of the file to read")
 }

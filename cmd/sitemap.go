@@ -4,6 +4,9 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +21,16 @@ var sitemapCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		crawler.CrawlFromSiteMap(args[0])
+		var urls []string
+		if err := crawler.UrlsFromSitemap(args[0], &urls); err != nil {
+			log.Fatal(err)
+			return err
+		}
+		fmt.Printf("Found %d URLs in sitemap\n", len(urls))
+		err = crawler.Crawl(&urls)
+		if err != nil {
+			return err
+		}
 		return nil
 	},
 }

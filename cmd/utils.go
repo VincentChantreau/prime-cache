@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"sync"
+
 	"github.com/VincentChantreau/prime-cache/crawler"
 	"github.com/VincentChantreau/prime-cache/parser"
 )
@@ -14,8 +16,9 @@ func BuildCrawler(config *Config) (crawler.Crawler, error) {
 
 	parserConfig := parser.ParserConfig{FilteredFileExtensions: config.extensions}
 	parser := parser.Parser{Config: &parserConfig}
+	mutex := sync.Mutex{}
 	crawlerConfig := crawler.CrawlerConfig{Interval: config.interval, Mode: mode}
-	crawler := crawler.Crawler{Config: &crawlerConfig, Parser: &parser}
+	crawler := crawler.Crawler{Config: &crawlerConfig, Parser: &parser, Mutex: &mutex}
 	return crawler, nil
 
 }

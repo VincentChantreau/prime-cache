@@ -36,10 +36,3 @@ func init() {
 	warmCmd.MarkFlagRequired("mode")
 
 }
-
-//  https://www.astronome.fr/1_fr_0_sitemap.xml
-// prime-cache warm --sitemap https://mysite.com/sitemap
-// prime-cache warm --local-file local_urls.txt (newline)
-// prime-cache warm --file-format=csv --local-file local_urls.csv
-// prime-cache warm --inline https://mysite.com  https://mysite.com/product.html
-// prime-cache warm --mode full
