@@ -36,14 +36,6 @@ func (crawler *Crawler) UrlsFromSitemap(url string, result *[]string) error {
 	return err
 }
 
-func (crawler *Crawler) headRequest(url string) (*http.Response, error) {
-	resp, err := http.Head(url)
-	if err != nil {
-		return &http.Response{}, err
-	}
-	return resp, nil
-}
-
 func (crawler *Crawler) getRequest(url string) (*http.Response, error) {
 	resp, err := http.Get(url)
 	if err != nil {

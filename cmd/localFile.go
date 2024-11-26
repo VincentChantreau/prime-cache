@@ -44,4 +44,5 @@ to quickly create a Cobra application.`,
 func init() {
 	warmCmd.AddCommand(localFileCmd)
 	localFileCmd.Flags().StringVar(&config.fileFormat, "file-format", "csv", "specify file format of the file to read")
+
 }

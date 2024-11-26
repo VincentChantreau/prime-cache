@@ -33,6 +33,8 @@ func init() {
 	warmCmd.PersistentFlags().DurationVar(&config.interval, "interval", 100*time.Millisecond, "the interval between each HTTP GET request to URLs")
 	warmCmd.PersistentFlags().StringVar(&config.crawlMode, "mode", "light", "crawl mode (light, full, custom)")
 	warmCmd.PersistentFlags().StringSliceVar(&config.extensions, "extensions", []string{}, "file extensions needed for URLs found in body to be warmed")
-	warmCmd.MarkFlagRequired("mode")
-
+	err := warmCmd.MarkFlagRequired("mode")
+	if err != nil {
+		panic(err)
+	}
 }

@@ -37,6 +37,9 @@ to quickly create a Cobra application.`,
 func init() {
 	warmCmd.AddCommand(inlineCmd)
 	inlineCmd.Flags().StringSliceVar(&urls, "urls", []string{}, "specify urls inline")
-	inlineCmd.MarkFlagRequired("urls")
+	err := inlineCmd.MarkFlagRequired("urls")
+	if err != nil {
+		panic(err)
+	}
 
 }
