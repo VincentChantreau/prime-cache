@@ -1,9 +1,15 @@
 name: build
-run-name: Build Golang application
+run-name: Build and release
 on:
   push:
     tags:
       - "*.*.*"
+  workflow_run:
+    workflows: ["test"]
+    branches: [main]
+    types:
+      - completed
+
 permissions:
   contents: write
 
