@@ -29,12 +29,12 @@ var warmCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(warmCmd)
+	RootCmd.AddCommand(warmCmd)
 	warmCmd.PersistentFlags().DurationVar(&config.interval, "interval", 100*time.Millisecond, "the interval between each HTTP GET request to URLs")
 	warmCmd.PersistentFlags().StringVar(&config.crawlMode, "mode", "light", "crawl mode (light, full, custom)")
 	warmCmd.PersistentFlags().StringSliceVar(&config.extensions, "extensions", []string{}, "file extensions needed for URLs found in body to be warmed")
-	err := warmCmd.MarkFlagRequired("mode")
-	if err != nil {
-		panic(err)
-	}
+	// err := warmCmd.MarkFlagRequired("mode")
+	// if err != nil {
+	// 	panic(err)
+	// }
 }

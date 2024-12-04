@@ -59,7 +59,6 @@ To warm urls found in the main URL webpage, you can switch to `full` mode using 
 prime-cache crawl --mode full <path_to_sitemap.xml>
 ```
 
-
 ### Contribution
 
 Contributions to Prime-Cache are welcomed and encouraged! If you encounter any issues or have suggestions for enhancements, please don't hesitate to open an issue or submit a pull request on GitHub.

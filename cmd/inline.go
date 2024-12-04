@@ -12,13 +12,9 @@ var urls []string
 // inlineCmd represents the inline command
 var inlineCmd = &cobra.Command{
 	Use:   "inline",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "provide urls inline",
+	Long: `You can use the --urls flags multiple times, or use csv format to declare multiple url like so:
+--urls=url1,url2`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		crawler, err := BuildCrawler(&config)
 		if err != nil {
