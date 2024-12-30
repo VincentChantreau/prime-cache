@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"os"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
 )
@@ -12,8 +14,11 @@ var genDocCmd = &cobra.Command{
 	Long:  `Generate the documentation of all the available CLI commands. Target folder must exist`,
 	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-
-		err := doc.GenMarkdownTree(RootCmd, args[0])
+		err := os.Mkdir(args[0], os.ModeDir)
+		if err != nil {
+			return err
+		}
+		err = doc.GenMarkdownTree(RootCmd, args[0])
 		if err != nil {
 			return err
 		}
